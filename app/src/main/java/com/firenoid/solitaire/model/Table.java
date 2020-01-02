@@ -217,7 +217,7 @@ public class Table {
 
             Card top = toDeck.getCardAt(0);
             boolean differentColors = card.isRed() ^ top.isRed();
-            return differentColors && top.numberValue() == card.numberValue() + 1;
+            return !differentColors && top.numberValue() == card.numberValue() + 1;
         }
 
         return false;
