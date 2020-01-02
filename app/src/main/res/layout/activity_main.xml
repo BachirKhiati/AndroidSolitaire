@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.firenoid.solitaire.GameView
+        android:id="@+id/effectsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <include
+            android:id="@+id/winView"
+            layout="@layout/win_view"
+            android:visibility="invisible" />
+
+        <include
+            android:id="@+id/scoreView"
+            layout="@layout/score_view"
+            android:visibility="visible" />
+    </com.firenoid.solitaire.GameView>
+
+    <include
+        android:id="@+id/menuView"
+        layout="@layout/menu_view" />
+
+    <include
+        android:id="@+id/statsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        layout="@layout/stats_view"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:id="@+id/menu_new_game_win"
+        style="@style/menuTextStyle"
+        android:text="@string/menu_new"
+        android:visibility="gone"/>
+
+    <include
+        layout="@layout/hint_view"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/welcomeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black" >
+
+        <ImageView
+            android:id="@+id/welcomeLogo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/splash" />
+
+    </FrameLayout>
+
+</FrameLayout>

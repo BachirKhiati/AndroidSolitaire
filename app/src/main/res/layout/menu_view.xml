@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/game_submenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/menu_draw1"
+            style="@style/menuTextStyle"
+            android:text="@string/menu_draw1" />
+
+        <TextView
+            android:id="@+id/menu_draw3"
+            style="@style/menuTextStyle"
+            android:text="@string/menu_draw3" />
+
+        <TextView
+            android:id="@+id/menu_replay"
+            style="@style/menuTextStyle"
+            android:text="@string/menu_replay" />
+
+        <TextView
+            android:id="@+id/menu_new_game"
+            style="@style/menuTextStyle"
+            android:text="@string/menu_new" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/menu_stats_btn"
+            android:layout_width="@dimen/menu_size"
+            android:layout_height="@dimen/menu_size"
+            android:background="@drawable/menu_item"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:src="@drawable/btn_stats" />
+
+        <ImageView
+            android:id="@+id/menu_settings_btn"
+            android:layout_width="@dimen/menu_size"
+            android:layout_height="@dimen/menu_size"
+            android:background="@drawable/menu_item"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:src="@drawable/btn_settings" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/menu_game_btn"
+            android:layout_width="@dimen/menu_size"
+            android:layout_height="@dimen/menu_size"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/menu_item"
+            android:src="@mipmap/ic_launcher" />
+
+        <ImageView
+            android:id="@+id/menu_undo_btn"
+            android:layout_width="@dimen/menu_size"
+            android:layout_height="@dimen/menu_size"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/menu_item"
+            android:src="@drawable/btn_undo" />
+
+        <ImageView
+            android:id="@+id/menu_autofinish_btn"
+            android:layout_width="@dimen/menu_size"
+            android:layout_height="@dimen/menu_size"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/menu_item"
+            android:src="@drawable/btn_autofinish" />
+
+    </LinearLayout>
+</FrameLayout>
