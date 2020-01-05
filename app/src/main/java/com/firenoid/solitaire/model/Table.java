@@ -1,5 +1,7 @@
 package com.firenoid.solitaire.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +38,8 @@ public class Table {
         init();
     }
 
+
+
     public void reset() {
         history.clear();
         gameDeck = new Deck(Card.values());
@@ -50,19 +54,42 @@ public class Table {
         points = 0;
     }
 
+    public void shuffle() {
+        history.clear();
+        Log.d("Star", Arrays.toString(tableau));
+        Log.d("Star", String.valueOf(tableau[0].getCardsCount()));
+//        gameDeck = new Deck(Card.values());
+        gameDeck.clear();
+//        waste = new Deck();
+        // 4
+        foundations = foundations;
+        // 7
+        for(int i=0;i<tableau.length;i++){
+        for(int j=tableau[i].getCardsCount()-1;j>=0;j--){
+            gameDeck.addCard(tableau[i].getCardAt(j));
+//            System.arraycopy(, 0, arr, 0, tableau[i].getCardsCount());
+        }
+        }
+        tableau = new Deck[] { new Deck(), new Deck(), new Deck(), new Deck(), new Deck(), new Deck(), new Deck() };
+        // set cards
+//        gameDeck.shuffleOld();
+        time = 0;
+        points = 0;
+    }
+
     public void init() {
         for(int x = 0; gameDeck.getCardsCount()> 0; x++){
             for (int i = 0; i < Table.TABLEAU_DECKS_COUNT; i++) {
 //                for (int j = i; j < Table.TABLEAU_DECKS_COUNT+1; j++) {
                     gameDeck.takeFromFirst(1, tableau[i]);
 //                }
-//               tableau[i].reverse();
 
 
                 // TODO this is lame, optimize takeFromFirst
             }
 
         }
+        for(int i=0;i<Table.TABLEAU_DECKS_COUNT;i++){tableau[i].reverse();}
         for (int i = 0; i < Table.TABLEAU_DECKS_COUNT; i++) {
             if(i >= 0 && i < 3){
                 tableau[i].setOpenCardsCount(Table.TABLEAU_DECKS_COUNT + 1 - i);

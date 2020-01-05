@@ -22,6 +22,7 @@ import com.firenoid.solitaire.model.Table;
 
 public class MainActivity extends Activity {
     private final ImageView[] cardView = new ImageView[Card.values().length];
+    private String[] faundationCardView = new String[Card.values().length];
     private final Bitmap[] cardBitmap = new Bitmap[Card.values().length];
     private final boolean[] cardOpen = new boolean[Card.values().length];
     private Bitmap cardBack;
@@ -146,9 +147,16 @@ public class MainActivity extends Activity {
     public ImageView getCardView(int tag) {
         return cardView[tag];
     }
+    public String[] getFaundationCardView() {
+        return faundationCardView;
+    }
 
     public void setCardView(int tag, ImageView view) {
         cardView[tag] = view;
+    }
+
+    public void setFaundationCardView(int tag, String str) {
+        faundationCardView[tag] = str;
     }
 
     public StatsManager getStatsManager() {

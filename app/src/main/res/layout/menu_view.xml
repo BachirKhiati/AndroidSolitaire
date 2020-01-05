@@ -96,4 +96,12 @@
             android:src="@drawable/btn_autofinish" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/shuffle_btn"
+        android:layout_width="100dp"
+        android:layout_height="88dp"
+        android:layout_gravity="bottom|center"
+        android:background="@mipmap/ic_launcher"
+        android:text="Shuffle (2)" />
 </FrameLayout>

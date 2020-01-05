@@ -34,6 +34,15 @@ public class Deck {
         }
     }
 
+    public void shuffleOld() {
+        List<Card> list = getCardsAsList();
+        Collections.shuffle(list);
+        int i = 0;
+        for (Card card : list) {
+            arr[(startIndex + i++) % ARR_SIZE] = card;
+        }
+    }
+
     public void reverse() {
         List<Card> list = getCardsAsList();
         Collections.reverse(list);
