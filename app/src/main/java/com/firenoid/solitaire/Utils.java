@@ -21,11 +21,10 @@ public class Utils {
         AnimatorSet effectGameWon = mainActivity.getMover().showGameWonEffect();
         effectGameWon.setStartDelay(1000);
 
-        Animator anim = mainActivity.getStatsManager().showWinView(effectGameWon, mainActivity.getTable());
         Animator anim1 = mainActivity.getMenuController().showWinMenu();
 
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(anim, anim1);
+        set.playTogether(anim1);
         set.setDuration(5 * mainActivity.getAnimationTimeMs());
         set.start();
     }

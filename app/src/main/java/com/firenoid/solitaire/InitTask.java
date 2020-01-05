@@ -112,7 +112,6 @@ public class InitTask extends AsyncTask<MainActivity, Void, Object> {
     }
 
     private void attachWhiteboardListeners() {
-        Whiteboard.addListener(new UpdateStatsListener(mainActivity), Whiteboard.Event.WON, Whiteboard.Event.LOST);
         Whiteboard.addListener(new ShowAutofinishButtonListener(mainActivity),
                 Whiteboard.Event.GAME_STARTED, Whiteboard.Event.MOVED);
         Whiteboard.addListener(new HintController(mainActivity), Whiteboard.Event.OFFERED_AUTOFINISH,
@@ -224,20 +223,17 @@ public class InitTask extends AsyncTask<MainActivity, Void, Object> {
 
         mainActivity.getMover().restoreTableState();
 
-        // position win view
-        mainActivity.getStatsManager().centerWinViewContent();
-
         mainActivity.unpause();
-        installScoreViewUpdater();
+//        installScoreViewUpdater();
 
         mainActivity.getWelcomeController().initComplete();
     }
 
-    private void installScoreViewUpdater() {
-        ScoreViewUpdater u = new ScoreViewUpdater(mainActivity);
-        Whiteboard.addListener(u, Whiteboard.Event.MOVED, Whiteboard.Event.GAME_STARTED, Whiteboard.Event.LOST, Whiteboard.Event.WON,
-                Whiteboard.Event.PAUSED, Whiteboard.Event.UNPAUSED);
-    }
+//    private void installScoreViewUpdater() {
+//        ScoreViewUpdater u = new ScoreViewUpdater(mainActivity);
+//        Whiteboard.addListener(u, Whiteboard.Event.MOVED, Whiteboard.Event.GAME_STARTED, Whiteboard.Event.LOST, Whiteboard.Event.WON,
+//                Whiteboard.Event.PAUSED, Whiteboard.Event.UNPAUSED);
+//    }
 
     private void attachResizeListener() {
         Whiteboard.addListener(new Whiteboard.WhiteboardListener() {
@@ -258,7 +254,6 @@ public class InitTask extends AsyncTask<MainActivity, Void, Object> {
         gameDeckView.setX(layout.deckLocations[Table.GAME_DECK_INDEX].x);
         gameDeckView.setY(layout.deckLocations[Table.GAME_DECK_INDEX].y);
         mainActivity.getMover().restoreTableState();
-        mainActivity.getStatsManager().centerWinViewContent();
         effectsView.setBackgroundDrawable(null);
 
         new LoadImagesTask(mainActivity, layout, mainActivity.getSettingsManager().getSettings()) {

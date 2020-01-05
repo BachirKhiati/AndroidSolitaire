@@ -13,8 +13,13 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,8 +29,11 @@ import com.firenoid.solitaire.game.JSONStorage;
 import com.firenoid.solitaire.model.Card;
 import com.firenoid.solitaire.model.Deck;
 import com.firenoid.solitaire.model.IMove2;
+import com.firenoid.solitaire.model.Move;
 import com.firenoid.solitaire.model.Table;
 import com.firenoid.solitaire.util.TouchHandler2;
+
+import static com.firenoid.solitaire.model.Table.TABLEAU_DECKS_COUNT;
 
 public class MenuController {
 
@@ -38,14 +46,11 @@ public class MenuController {
     private final View menuView;
     private final View leftMenu;
     private final View rightMenu;
-    private final View scoreView;
 
     private final View btnSettings;
-    private final View btnStats;
     private final View btnAutofinish;
     private final View btnUndo;
     private final Button btnShuffle;
-    private final ImageView btnGame;
     private final TextView btnNewGame;
     private final View btnDraw1;
     private final View btnDraw3;
@@ -55,24 +60,22 @@ public class MenuController {
     private boolean showingWinMenu;
     private boolean disableMenu;
     private boolean disableToggle;
+    private Animation vibrateAnimation;
+
 
     public MenuController(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         animTime = mainActivity.getResources().getInteger(android.R.integer.config_mediumAnimTime);
-
         menuView = mainActivity.findViewById(R.id.menuView);
         leftMenu = menuView.findViewById(R.id.menu_left);
         rightMenu = menuView.findViewById(R.id.menu_right);
         btnShuffle = (Button) menuView.findViewById(R.id.shuffle_btn);
         gameSubmenu = menuView.findViewById(R.id.game_submenu);
-        scoreView = mainActivity.findViewById(R.id.scoreView);
 
         btnReplay = menuView.findViewById(R.id.menu_replay);
         btnSettings = menuView.findViewById(R.id.menu_settings_btn);
-        btnStats = menuView.findViewById(R.id.menu_stats_btn);
         btnAutofinish = menuView.findViewById(R.id.menu_autofinish_btn);
         btnUndo = menuView.findViewById(R.id.menu_undo_btn);
-        btnGame = (ImageView) menuView.findViewById(R.id.menu_game_btn);
         btnNewGame = (TextView) menuView.findViewById(R.id.menu_new_game);
         btnDraw1 = menuView.findViewById(R.id.menu_draw1);
         btnDraw3 = menuView.findViewById(R.id.menu_draw3);
@@ -154,18 +157,11 @@ public class MenuController {
 
             }
         });
-
-        btnStats.setOnTouchListener(new TouchHandler2() {
-            @Override
-            public void click(int x, int y) {
-                hideMenuNow();
-                mainActivity.getStatsManager().toggleStats();
-            }
-        });
         btnAutofinish.setOnTouchListener(new TouchHandler2() {
             @Override
             public void click(int x, int y) {
-                autofinish();
+//                autofinish();
+                hintUser();
             }
         });
         btnUndo.setOnTouchListener(new TouchHandler2() {
@@ -178,27 +174,6 @@ public class MenuController {
                 Animator anim = mainActivity.getMover().undo();
                 anim.start();
                 updateMenu();
-            }
-        });
-        btnGame.setOnTouchListener(new TouchHandler2() {
-            @Override
-            protected void click(int x, int y) {
-                if (gameSubmenu.getVisibility() == View.GONE) {
-                    gameSubmenu.setAlpha(0);
-                    gameSubmenu.setVisibility(View.VISIBLE);
-                    gameSubmenu.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            gameSubmenu.setX(rightMenu.getX() - gameSubmenu.getWidth()
-                                    - mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin));
-                            gameSubmenu.setY(Math.max(0, rightMenu.getY() + btnGame.getHeight() - gameSubmenu.getHeight()));
-                            gameSubmenu.setAlpha(1);
-                        }
-                    });
-                } else {
-                    gameSubmenu.setVisibility(View.GONE);
-                    gameSubmenu.setAlpha(0);
-                }
             }
         });
         btnNewGame.setOnTouchListener(new TouchHandler2() {
@@ -259,12 +234,6 @@ public class MenuController {
         AnimatorSet res = new AnimatorSet();
         res.playTogether(anims);
         res.setDuration(mainActivity.getAnimationTimeMs());
-        res.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                btnGame.setImageResource(curDrawThreeImageId[0]);
-            }
-        });
         return res;
     }
 
@@ -283,7 +252,6 @@ public class MenuController {
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                scoreView.setVisibility(View.GONE);
                 menuVisible = winMenu;
                 showingWinMenu = true;
             }
@@ -296,20 +264,17 @@ public class MenuController {
         if (table == null) {
             return;
         }
-
-        btnGame.setVisibility(View.VISIBLE);
         btnSettings.setVisibility(View.VISIBLE);
-        btnStats.setVisibility(View.VISIBLE);
         btnReplay.setVisibility(table.getHistory().isEmpty() ? View.GONE : View.VISIBLE);
         btnDraw1.setVisibility(View.VISIBLE);
         btnDraw3.setVisibility(View.VISIBLE);
 
-        if(mainActivity.getSolver().canAutoComplete(table)) {
+//        if(mainActivity.getSolver().canAutoComplete(table)) {
             btnAutofinish.setAlpha(1);
             btnAutofinish.setVisibility(View.VISIBLE);
-        } else {
-            hideItemNow(btnAutofinish);
-        }
+//        } else {
+//            hideItemNow(btnAutofinish);
+//        }
         if(!table.getHistory().isEmpty()) {
             btnUndo.setAlpha(1);
             btnUndo.setVisibility(View.VISIBLE);
@@ -365,6 +330,9 @@ public class MenuController {
     public void showLeftMenu() {
         showMenu(leftMenu);
     }
+    public void showShuffleBtn() {
+        btnShuffle.setVisibility(View.VISIBLE);
+    }
 
     public void showRightMenu() {
         showMenu(rightMenu);
@@ -401,7 +369,6 @@ public class MenuController {
             }
         });
         set.start();
-        scoreView.setVisibility(View.GONE);
         menuVisible = menu;
     }
 
@@ -446,9 +413,6 @@ public class MenuController {
             @Override
             public void onAnimationEnd(Animator animation) {
                 menu.setVisibility(View.GONE);
-                if (!hideScore && menuVisible == null) {
-                    scoreView.setVisibility(View.VISIBLE);
-                }
             }
         });
         set.playTogether(moveOut, fadeOut);
@@ -458,9 +422,8 @@ public class MenuController {
 
     public void showAutofinishMenu() {
         btnAutofinish.setVisibility(View.VISIBLE);
-        btnGame.setVisibility(View.INVISIBLE);
+        btnShuffle.setVisibility(View.INVISIBLE);
         btnSettings.setVisibility(View.INVISIBLE);
-        btnStats.setVisibility(View.INVISIBLE);
         btnUndo.setVisibility(View.INVISIBLE);
 
         menuView.post(new Runnable() {
@@ -493,10 +456,74 @@ public class MenuController {
         autoFinish.start();
     }
 
+    public void hintUser(){
+        Deck[] foundationDeck = mainActivity.getTable().getFoundations();
+        Deck[] table = mainActivity.getTable().getTableau();
+        ArrayList listFoundation = mainActivity.getFaundationCardView();
+        ArrayList<Integer> ordinalValues = new ArrayList<>();
+        for(int deckIndex = 0;deckIndex < Table.TABLEAU_DECKS_COUNT; deckIndex++){
+            for(int cardIndex = 0 ; cardIndex < table[deckIndex].getCardsCount();cardIndex++){
+                Card card = table[deckIndex].getCardAt(cardIndex);
+                boolean isTop = table[deckIndex].getCardAt(cardIndex) == table[deckIndex].getCardAt(0);
+                // for the tableau
+                for (int i = 0; i < 7; i++) {
+                    Deck deck = table[i];
+                    if (deck.getCardsCount() == 0) {
+                        if (card.numberValue() == 13) {
+                            // king opens new deck
+                            ordinalValues.add(card.ordinal());
+                        }
+                        continue;
+                    }
+
+                    Card top = deck.getCardAt(0);
+                    boolean differentIndex = deckIndex != i;
+                    boolean sameType = card.type() == top.type();
+                    if (mainActivity.isCardRevealed(card.ordinal()) && mainActivity.isCardRevealed(top.ordinal()) && differentIndex && top.numberValue() == card.numberValue() + 1 && sameType) {
+                        ordinalValues.add(card.ordinal());
+
+                    } else if(listFoundation.contains(card.ordinal())){
+                        ordinalValues.add(card.ordinal());
+
+                    }
+                }
+
+                for (int i = 0; i < 4; i++) {
+                    Deck deck = foundationDeck[i];
+                    if (mainActivity.isCardRevealed(card.ordinal()) && deck.getCardsCount() == 0 && card.numberValue() == 1 && isTop) {
+                        ordinalValues.add(card.ordinal());
+                        continue;
+                    } else if (mainActivity.isCardRevealed(card.ordinal()) && deck.getCardsCount() > 0 && deck.getCardAt(0).getSuit() == card.getSuit()
+                            && deck.getCardAt(0).numberValue() + 1 == card.numberValue() && isTop) {
+                        ordinalValues.add(card.ordinal());
+                    }
+                }
+
+            }
+
+            for(Integer i : ordinalValues){
+                ImageView lastImageView = mainActivity.getCardView(i);
+                TranslateAnimation animate = new TranslateAnimation(0,0,0,-40);
+                animate.setDuration(1000);
+                animate.setRepeatMode(Animation.REVERSE);
+                lastImageView.startAnimation(animate);
+            }
+
+        }
+
+
+
+//        Animator rotate = mainActivity.getMover().hintUser(ordinalValues);
+//        rotate.setInterpolator(new DecelerateInterpolator());
+////        disableMenu = true;
+//        rotate.start();
+
+    }
+
     public void newGame() {
         Table table = mainActivity.getTable();
         showingWinMenu = false;
-
+        btnShuffle.setVisibility(View.GONE);
         boolean lost = false;
         if (!table.isSolved()) {
             Whiteboard.post(Event.LOST);
@@ -513,6 +540,7 @@ public class MenuController {
 
         mainActivity.getTimer().pause();
         mainActivity.getTimer().setTime(0);
+        mainActivity.resetFoundationCardView();
         JSONStorage storage = mainActivity.getStorage();
         storage.saveTable(table);
         Whiteboard.post(Event.GAME_STARTED);
@@ -525,6 +553,7 @@ public class MenuController {
     public void newShuffleGame() {
         Table table = mainActivity.getTable();
         showingWinMenu = false;
+        btnShuffle.setVisibility(View.GONE);
 
         boolean lost = false;
         if (!table.isSolved()) {
@@ -588,6 +617,7 @@ public class MenuController {
                     }
                 });
                 nu.start();
+
             }
         });
         reset.setInterpolator(new DecelerateInterpolator());
@@ -611,6 +641,7 @@ public class MenuController {
                     }
                 });
                 nu.start();
+
             }
         });
         reset.setInterpolator(new DecelerateInterpolator());

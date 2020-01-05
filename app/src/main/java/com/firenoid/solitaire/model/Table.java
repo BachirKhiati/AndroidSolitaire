@@ -243,8 +243,8 @@ public class Table {
             }
 
             Card top = toDeck.getCardAt(0);
-            boolean differentColors = card.isRed() ^ top.isRed();
-            return !differentColors && top.numberValue() == card.numberValue() + 1;
+            boolean sameType = card.type() == top.type();
+            return sameType && top.numberValue() == card.numberValue() + 1;
         }
 
         return false;
@@ -305,8 +305,9 @@ public class Table {
                 continue;
             }
             Card top = deck.getCardAt(0);
-            boolean differentColors = card.isRed() ^ top.isRed();
-            if (top.numberValue() == card.numberValue() + 1 && differentColors) {
+            boolean differentIndex = sourceDeckIndex != i;
+            boolean sameType = card.type() == top.type();
+            if (differentIndex && top.numberValue() == card.numberValue() + 1 && sameType) {
                 result.add(i);
             }
         }

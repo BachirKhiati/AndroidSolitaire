@@ -12,24 +12,11 @@
             android:id="@+id/winView"
             layout="@layout/win_view"
             android:visibility="invisible" />
-
-        <include
-            android:id="@+id/scoreView"
-            layout="@layout/score_view"
-            android:visibility="visible" />
     </com.firenoid.solitaire.GameView>
 
     <include
         android:id="@+id/menuView"
         layout="@layout/menu_view" />
-
-    <include
-        android:id="@+id/statsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        layout="@layout/stats_view"
-        android:visibility="invisible" />
 
     <TextView
         android:layout_width="wrap_content"

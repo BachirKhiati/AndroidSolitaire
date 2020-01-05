@@ -90,7 +90,7 @@ public class HintController implements WhiteboardListener {
         Layout layout = mainActivity.getLayout();
         int x = (int) (mainActivity.findViewById(R.id.menu_right).getX()
                 - mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin) / 2);
-        int y = layout.availableSize.y - mainActivity.findViewById(R.id.menu_game_btn).getHeight()
+        int y = layout.availableSize.y - mainActivity.findViewById(R.id.shuffle_btn).getHeight()
                 - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
 
         mainActivity.getMenuController().showRightMenu();
@@ -103,7 +103,7 @@ public class HintController implements WhiteboardListener {
         Layout layout = mainActivity.getLayout();
         int x = (int) (mainActivity.findViewById(R.id.menu_right).getX()
                 - mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin) / 2);
-        int y = layout.availableSize.y - mainActivity.findViewById(R.id.menu_game_btn).getHeight()
+        int y = layout.availableSize.y - mainActivity.findViewById(R.id.shuffle_btn).getHeight()
                 - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
 
         showHint(text, x, y, true);
@@ -114,7 +114,7 @@ public class HintController implements WhiteboardListener {
         Layout layout = mainActivity.getLayout();
         int x = (int) (mainActivity.findViewById(R.id.menu_right).getX()
                 - mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin) / 2);
-        int y = layout.availableSize.y - mainActivity.findViewById(R.id.menu_game_btn).getHeight()
+        int y = layout.availableSize.y - mainActivity.findViewById(R.id.shuffle_btn).getHeight()
                 - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
 
         showHint(text, x, y, true);
@@ -142,7 +142,7 @@ public class HintController implements WhiteboardListener {
         int x = (int) (mainActivity.findViewById(R.id.menu_settings_btn).getX()
                 + mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin))
                 + mainActivity.findViewById(R.id.menu_settings_btn).getWidth();
-        int y = layout.availableSize.y - mainActivity.findViewById(R.id.menu_game_btn).getHeight()
+        int y = layout.availableSize.y - mainActivity.findViewById(R.id.shuffle_btn).getHeight()
                 - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
 
         showHint(text, x, y, false);

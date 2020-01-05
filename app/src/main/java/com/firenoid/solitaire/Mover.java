@@ -1,6 +1,5 @@
 package com.firenoid.solitaire;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +28,8 @@ import com.firenoid.solitaire.model.Deck;
 import com.firenoid.solitaire.model.IMove2;
 import com.firenoid.solitaire.model.RecycleWasteMove;
 import com.firenoid.solitaire.model.Table;
+
+import static com.firenoid.solitaire.model.Card.strValues;
 
 public class Mover {
 
@@ -266,7 +267,6 @@ public class Mover {
                 }
 
                 if (mainActivity.getTable().isSolved()) {
-                    mainActivity.getStatsManager().storeGameStats();
 
                     Utils.showGameWonStuff(mainActivity);
                 }
@@ -280,22 +280,30 @@ public class Mover {
     public Animator deal() {
         ArrayList<Animator> anims = new ArrayList<Animator>();
         ArrayList<Animator> openAnims = new ArrayList<Animator>();
+       ArrayList listFoundation =  mainActivity.getFaundationCardView();
 
         Layout layout = mainActivity.getLayout();
         int deckX = layout.deckLocations[Table.GAME_DECK_INDEX].x;
         int deckY = layout.deckLocations[Table.GAME_DECK_INDEX].y;
         for (int tag = 0; tag < Card.values().length; tag++) {
+            if (listFoundation.contains(tag)) {
+                continue;
+            }
             View cardView = mainActivity.getCardView(tag);
             cardView.setX(deckX);
             cardView.setY(deckY);
         }
 
         for (int i = 0; i < Table.TABLEAU_DECKS_COUNT; i++) {
+
             Deck deck = mainActivity.getTable().getTableau()[i];
             Point endLoc = layout.deckLocations[Table.FOUNDATION_DECKS_COUNT + i];
             Point p = new Point(endLoc);
             ImageView lastImageView = null;
             for (int cardIndex = deck.getCardsCount() - 1; cardIndex >= 0; cardIndex--) {
+                if (listFoundation.contains(i)) {
+                    continue;
+                }
                 ImageView imageView = mainActivity.getCardView(deck.getCardAt(cardIndex).ordinal());
                 imageView.bringToFront();
 
@@ -361,6 +369,8 @@ public class Mover {
                 dealAnimation = null;
                 updateGameDeck();
                 invalidatePreKitkat();
+                mainActivity.getMenuController().showShuffleBtn();
+
             }
         });
         mainActivity.getMenuController().updateMenu();
@@ -463,7 +473,6 @@ public class Mover {
             @Override
             public void onAnimationStart(Animator animation) {
                 collectAnimation = animation;
-                mainActivity.getStatsManager().hideWinView().start();
                 Animator winAnim = activeWinAnimation;
                 if (winAnim != null) {
                     winAnim.cancel();
@@ -482,18 +491,25 @@ public class Mover {
         List<Animator> anims = new ArrayList<Animator>();
         Layout layout = mainActivity.getLayout();
         Random random = new Random();
-        Deck gameDeck = null;
-        String[] t =  mainActivity.getTable().getFoundations();
+        Deck[] t =  mainActivity.getTable().getFoundations();
+        ArrayList<Integer> ordinalValues = new ArrayList<>();
         for(int i=0;i < t.length;i++){
         for(int j=0; j< t[i].getCardsCount();j++){
-            gameDeck.addCard(t[i].getCardAt(j));
-
+            int d= Arrays.asList(strValues).indexOf(t[i].getCardAt(j).toString());
+            if(d != -1){
+                ordinalValues.add(d);
+                // is present ... :)
+            }
         }
         }
+        mainActivity.setFoundationCardView(ordinalValues);
 
         for (int i = 0; i < Card.values().length; i++) {
 //            if (mainActivity.is(i)) {
 //            }
+            if (ordinalValues.contains(i)) {
+                continue;
+            }
 
             int startDelay = random.nextInt(mainActivity.getAnimationTimeMs());
             ImageView v = mainActivity.getCardView(i);
@@ -526,7 +542,6 @@ public class Mover {
             @Override
             public void onAnimationStart(Animator animation) {
                 collectAnimation = animation;
-                mainActivity.getStatsManager().hideWinView().start();
                 Animator winAnim = activeWinAnimation;
                 if (winAnim != null) {
                     winAnim.cancel();
@@ -559,7 +574,7 @@ public class Mover {
         }
     }
 
-    private Animator flipCard(final int tag, boolean backward) {
+    public Animator flipCard(final int tag, boolean backward) {
         ObjectAnimator animation;
         if (backward) {
             if (mainActivity.isCardRevealed(tag)) {

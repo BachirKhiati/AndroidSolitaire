@@ -20,9 +20,11 @@ import com.firenoid.solitaire.game.Solver;
 import com.firenoid.solitaire.model.Card;
 import com.firenoid.solitaire.model.Table;
 
+import java.util.ArrayList;
+
 public class MainActivity extends Activity {
     private final ImageView[] cardView = new ImageView[Card.values().length];
-    private String[] faundationCardView = new String[Card.values().length];
+    private ArrayList<Integer> foundationCardView = new ArrayList<>();
     private final Bitmap[] cardBitmap = new Bitmap[Card.values().length];
     private final boolean[] cardOpen = new boolean[Card.values().length];
     private Bitmap cardBack;
@@ -33,13 +35,11 @@ public class MainActivity extends Activity {
     private Table table;
     private final Layout layout = new Layout();
     private MenuController menuController;
-    private StatsManager statsManager;
     private Mover mover;
     private final GameTimer timer = new GameTimer();
     private SettingsManager settingsManager;
     private PrefChangeToWhiteboardForwarder prefListener;
     private int animationTimeMs;
-    private ScoreManager scoreManager;
     private final Solver solver = new Solver();
     private WelcomeController welcomeController;
 
@@ -50,11 +50,10 @@ public class MainActivity extends Activity {
 
         effectsView = (FrameLayout) findViewById(R.id.effectsView);
 
-        statsManager = new StatsManager(this);
         settingsManager = new SettingsManager(this);
         prefListener = new PrefChangeToWhiteboardForwarder(this);
         mover = new Mover(this);
-        scoreManager = new ScoreManager(this);
+//        scoreManager = new ScoreManager(this);
         welcomeController = new WelcomeController(this);
 
         // wait for first layout
@@ -103,19 +102,13 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (statsManager.isShowingStats()) {
-            statsManager.toggleStats();
-            return;
-        }
+
         super.onBackPressed();
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (statsManager.isShowingStats()) {
-            statsManager.toggleStats();
-            return true;
-        }
+
         return super.dispatchTouchEvent(ev);
     }
 
@@ -147,21 +140,21 @@ public class MainActivity extends Activity {
     public ImageView getCardView(int tag) {
         return cardView[tag];
     }
-    public String[] getFaundationCardView() {
-        return faundationCardView;
+    public ArrayList getFaundationCardView() {
+        return foundationCardView;
+    }
+    public void resetFoundationCardView() {
+         foundationCardView.clear();
     }
 
     public void setCardView(int tag, ImageView view) {
         cardView[tag] = view;
     }
 
-    public void setFaundationCardView(int tag, String str) {
-        faundationCardView[tag] = str;
+    public void setFoundationCardView(ArrayList str) {
+        foundationCardView = str;
     }
 
-    public StatsManager getStatsManager() {
-        return statsManager;
-    }
 
     public MenuController getMenuController() {
         return menuController;
@@ -211,9 +204,6 @@ public class MainActivity extends Activity {
         return settingsManager;
     }
 
-    public ScoreManager getScoreManager() {
-        return scoreManager;
-    }
 
     public int getAnimationTimeMs() {
         return animationTimeMs;
