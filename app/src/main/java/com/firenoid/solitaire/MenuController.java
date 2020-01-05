@@ -7,6 +7,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ public class MenuController {
 
     private static final float ACTIVE_ALPHA = 0.5f;
     private static final float INACTIVE_ALPHA = 1f;
+    private static int SHUFFLE_COUNT = 2;
     private final MainActivity mainActivity;
     private final View gameSubmenu;
     private final View btnReplay;
@@ -41,6 +44,7 @@ public class MenuController {
     private final View btnStats;
     private final View btnAutofinish;
     private final View btnUndo;
+    private final Button btnShuffle;
     private final ImageView btnGame;
     private final TextView btnNewGame;
     private final View btnDraw1;
@@ -59,6 +63,7 @@ public class MenuController {
         menuView = mainActivity.findViewById(R.id.menuView);
         leftMenu = menuView.findViewById(R.id.menu_left);
         rightMenu = menuView.findViewById(R.id.menu_right);
+        btnShuffle = (Button) menuView.findViewById(R.id.shuffle_btn);
         gameSubmenu = menuView.findViewById(R.id.game_submenu);
         scoreView = mainActivity.findViewById(R.id.scoreView);
 
@@ -79,6 +84,7 @@ public class MenuController {
         leftMenu.setTranslationX(-leftMenu.getWidth() - leftMenu.getX());
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
         // attach to background
         final View gameBackground = mainActivity.findViewById(R.id.effectsView);
@@ -125,6 +131,30 @@ public class MenuController {
                 mainActivity.getSettingsManager().showSettings();
             }
         });
+        // create menu items
+        btnShuffle.setOnTouchListener(new TouchHandler2() {
+            @Override
+            public void click(int x, int y) {
+                if(SHUFFLE_COUNT == 1){
+                    SHUFFLE_COUNT--;
+                    btnShuffle.setText("New Game");
+                    newShuffleGame();
+
+                }  else if(SHUFFLE_COUNT  < 1){
+                    newGame();
+                    SHUFFLE_COUNT= 2;
+                    btnShuffle.setText("Shuffle ("+ SHUFFLE_COUNT+ ")");
+                } else {
+                    newShuffleGame();
+
+                    SHUFFLE_COUNT--;
+                    btnShuffle.setText("Shuffle ("+ SHUFFLE_COUNT+ ")");
+
+                }
+
+            }
+        });
+
         btnStats.setOnTouchListener(new TouchHandler2() {
             @Override
             public void click(int x, int y) {
@@ -491,6 +521,36 @@ public class MenuController {
         resetAndDeal();
     }
 
+
+    public void newShuffleGame() {
+        Table table = mainActivity.getTable();
+        showingWinMenu = false;
+
+        boolean lost = false;
+        if (!table.isSolved()) {
+            Whiteboard.post(Event.LOST);
+            lost = true;
+        }
+
+        table.shuffle();
+//        if (lost && mainActivity.getStorage().loadOrCreateStats(table.isDrawThree()).getStrike() < -2) {
+//            // don't make the user sad and generate a wining game
+//            mainActivity.getSolver().initWinningGame(table);
+//        } else {
+            table.init();
+//        }
+
+        mainActivity.getTimer().pause();
+        mainActivity.getTimer().setTime(0);
+        JSONStorage storage = mainActivity.getStorage();
+        storage.saveTable(table);
+        Whiteboard.post(Event.GAME_STARTED);
+        hideMenuNow();
+        reshuffelAndDeal();
+    }
+
+
+
     private void replay() {
         Table table = mainActivity.getTable();
 
@@ -515,6 +575,29 @@ public class MenuController {
 
     private void resetAndDeal() {
         Animator reset = mainActivity.getMover().collectCards();
+        reset.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Animator nu = mainActivity.getMover().deal();
+                nu.setStartDelay(mainActivity.getAnimationTimeMs() / 3);
+                // nu.setInterpolator(new AccelerateInterpolator());
+                nu.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        disableMenu = false;
+                    }
+                });
+                nu.start();
+            }
+        });
+        reset.setInterpolator(new DecelerateInterpolator());
+        disableMenu = true;
+        reset.start();
+    }
+
+    private void reshuffelAndDeal() {
+//        Animator reset = mainActivity.getMover().collectCards();
+        Animator reset = mainActivity.getMover().collectDealCards();
         reset.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
