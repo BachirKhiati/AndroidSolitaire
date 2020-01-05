@@ -1,5 +1,6 @@
 package com.firenoid.solitaire;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -477,6 +478,71 @@ public class Mover {
 
         return set;
     }
+    public Animator collectDealCards() {
+        List<Animator> anims = new ArrayList<Animator>();
+        Layout layout = mainActivity.getLayout();
+        Random random = new Random();
+        Deck gameDeck = null;
+        String[] t =  mainActivity.getTable().getFoundations();
+        for(int i=0;i < t.length;i++){
+        for(int j=0; j< t[i].getCardsCount();j++){
+            gameDeck.addCard(t[i].getCardAt(j));
+
+        }
+        }
+
+        for (int i = 0; i < Card.values().length; i++) {
+//            if (mainActivity.is(i)) {
+//            }
+
+            int startDelay = random.nextInt(mainActivity.getAnimationTimeMs());
+            ImageView v = mainActivity.getCardView(i);
+            ObjectAnimator mx = ObjectAnimator.ofFloat(v, "x", v.getX(), layout.deckLocations[Table.GAME_DECK_INDEX].x);
+            mx.setStartDelay(startDelay);
+            anims.add(mx);
+            ObjectAnimator my = ObjectAnimator.ofFloat(v, "y", v.getY(), layout.deckLocations[Table.GAME_DECK_INDEX].y);
+            my.setStartDelay(startDelay);
+            anims.add(my);
+            ObjectAnimator rotX = ObjectAnimator.ofFloat(v, "rotationX", v.getRotationX(), 0);
+            rotX.setStartDelay(startDelay);
+            anims.add(rotX);
+            if (mainActivity.isCardRevealed(i)) {
+                Animator flipCard = flipCard(i, false);
+                flipCard.setStartDelay(startDelay);
+                anims.add(flipCard);
+            } else {
+                ObjectAnimator rotY = ObjectAnimator.ofFloat(v, "rotationY", v.getRotationY(), 0);
+                rotY.setStartDelay(startDelay);
+                anims.add(rotY);
+            }
+        }
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(anims);
+        set.setInterpolator(new AccelerateInterpolator(2));
+        set.setDuration(2 * mainActivity.getAnimationTimeMs());
+
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                collectAnimation = animation;
+                mainActivity.getStatsManager().hideWinView().start();
+                Animator winAnim = activeWinAnimation;
+                if (winAnim != null) {
+                    winAnim.cancel();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                collectAnimation = null;
+            }
+        });
+
+        return set;
+    }
+
+
 
     void createFlipAnims(List<Card> cardsToFlip, List<Animator> flipAnims, boolean backward) {
         for (Card c : cardsToFlip) {
