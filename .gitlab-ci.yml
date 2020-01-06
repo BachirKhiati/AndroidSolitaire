@@ -23,7 +23,7 @@ before_script:
 
 stages:
   - build
-  - test
+#  - test
 
 lintDebug:
   stage: build
