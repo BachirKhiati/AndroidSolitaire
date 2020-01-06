@@ -79,5 +79,7 @@
     <string name="pref_card_background_enable">com.firenoid.solitaire.pref.cardBackgroundEnable</string>
     <string name="pref_game_background">com.firenoid.solitaire.pref.gameBackground</string>
     <string name="pref_game_background_enable">com.firenoid.solitaire.pref.gameBackgroundEnable</string>
+    <string name="shuffle_2">Shuffle (2)</string>
+    <string name="todo">TODO</string>
 
 </resources>

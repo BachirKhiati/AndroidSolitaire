@@ -301,7 +301,7 @@ public class Mover {
             Point p = new Point(endLoc);
             ImageView lastImageView = null;
             for (int cardIndex = deck.getCardsCount() - 1; cardIndex >= 0; cardIndex--) {
-                if (listFoundation.contains(i)) {
+                if (listFoundation.contains(deck.getCardAt(cardIndex).ordinal())) {
                     continue;
                 }
                 ImageView imageView = mainActivity.getCardView(deck.getCardAt(cardIndex).ordinal());

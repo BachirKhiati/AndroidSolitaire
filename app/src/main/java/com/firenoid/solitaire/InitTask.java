@@ -246,7 +246,6 @@ public class InitTask extends AsyncTask<MainActivity, Void, Object> {
 
     private void handleLayoutChange() {
         mainActivity.findViewById(R.id.hint).setVisibility(View.GONE);
-        mainActivity.findViewById(R.id.game_submenu).setVisibility(View.GONE);
         final Layout layout = mainActivity.getLayout();
         final View effectsView = mainActivity.getEffectsView();
         layout.initLayout(effectsView.getWidth(), effectsView.getHeight(),

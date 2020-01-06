@@ -146,7 +146,6 @@ public class HintController implements WhiteboardListener {
                 - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
 
         showHint(text, x, y, false);
-        mainActivity.getMenuController().showLeftMenu();
         mainActivity.findViewById(R.id.hint).setOnTouchListener(new TouchHandler2() {
             @Override
             protected void click(int x, int y) {
