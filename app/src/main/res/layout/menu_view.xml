@@ -24,16 +24,16 @@
 
         <ImageView
             android:id="@+id/menu_settings_btn"
-            android:layout_width="@dimen/menu_size"
-            android:layout_height="@dimen/menu_size"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/menu_item"
             android:src="@drawable/btn_settings" />
 
         <ImageView
             android:id="@+id/menu_newgame_btn"
-            android:layout_width="@dimen/menu_size"
-            android:layout_height="@dimen/menu_size"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/menu_item"
@@ -41,17 +41,17 @@
 
         <ImageView
             android:id="@+id/menu_undo_btn"
-            android:layout_width="@dimen/menu_size"
-            android:layout_height="@dimen/menu_size"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/menu_item"
             android:src="@drawable/btn_undo" />
 
         <ImageView
             android:id="@+id/menu_autofinish_btn"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menu_size"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/menu_item"
