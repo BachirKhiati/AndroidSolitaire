@@ -1,12 +1,9 @@
 package com.firenoid.solitaire;
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.FrameLayout;
@@ -102,9 +99,9 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
-        super.onBackPressed();
+        this.moveTaskToBack(true);
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -224,4 +221,5 @@ public class MainActivity extends Activity {
     public FrameLayout getEffectsView() {
         return effectsView;
     }
+
 }

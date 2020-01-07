@@ -3,6 +3,6 @@
 
     <color name="textColor">#EEEEEE</color>
     <color name="menuBtnLight">#AAFFFFFF</color>
-    <color name="transparent">#00000000</color>
+    <color name="transparent">#8F000000</color>
 
 </resources>

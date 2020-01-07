@@ -60,7 +60,7 @@ public class InitTask extends AsyncTask<MainActivity, Void, Object> {
                 } else {
                     table.init();
                 }
-//                storage.saveTable(table);
+                storage.saveTable(table);
             }
         }
         mainActivity.getTimer().stop();

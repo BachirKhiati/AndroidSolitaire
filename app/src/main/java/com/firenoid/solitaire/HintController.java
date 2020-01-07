@@ -3,6 +3,7 @@ package com.firenoid.solitaire;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,23 +41,8 @@ public class HintController implements WhiteboardListener {
                 if (!storage.isHintSeen(HINT_WELCOME)) {
                     showHintWelcome();
                     storage.setHintSeen(HINT_WELCOME);
-                } else if (!storage.isHintSeen(HINT_MENU)) {
-                    showHintMainMenu();
                 }
                 Whiteboard.removeListener(this, Event.GAME_STARTED);
-                break;
-
-            case OFFERED_AUTOFINISH:
-                if (!storage.isHintSeen(HINT_AUTOFINISH)) {
-                    mainActivity.getEffectsView().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            showHintAutofinish();
-                        }
-                    });
-                    storage.setHintSeen(HINT_AUTOFINISH);
-                }
-                Whiteboard.removeListener(this, Event.OFFERED_AUTOFINISH);
                 break;
 
             case MOVED:
@@ -97,20 +83,11 @@ public class HintController implements WhiteboardListener {
         showHint(text, x, y, true);
     }
 
-    private void showHintAutofinish() {
-        String text = mainActivity.getString(R.string.hint1);
 
-        Layout layout = mainActivity.getLayout();
-        int x = (int) (mainActivity.findViewById(R.id.menu_right).getX()
-                - mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin) / 2);
-        int y = layout.availableSize.y - mainActivity.findViewById(R.id.shuffle_btn).getHeight()
-                - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
-
-        showHint(text, x, y, true);
-    }
 
     private void showHintWelcome() {
         String text = mainActivity.getString(R.string.hint0);
+        final Animator hide = hideHint();
         Layout layout = mainActivity.getLayout();
         int x = (int) (mainActivity.findViewById(R.id.menu_right).getX()
                 - mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin) / 2);
@@ -119,42 +96,22 @@ public class HintController implements WhiteboardListener {
 
         showHint(text, x, y, true);
         mainActivity.getMenuController().showRightMenu();
-        mainActivity.findViewById(R.id.hint).setOnTouchListener(new TouchHandler2() {
+        mainActivity.findViewById(R.id.menu_right).setOnTouchListener(new TouchHandler2() {
             @Override
             protected void click(int x, int y) {
-                Animator hide = hideHint();
-                hide.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        showHintMainMenu();
-                    }
-                });
                 mainActivity.getMenuController().hideMenuNow();
                 hide.start();
             }
         });
-    }
-
-    private void showHintMainMenu() {
-        String text = mainActivity.getString(R.string.hint3);
-
-        Layout layout = mainActivity.getLayout();
-        int x = (int) (mainActivity.findViewById(R.id.menu_settings_btn).getX()
-                + mainActivity.getResources().getDimension(R.dimen.activity_horizontal_margin))
-                + mainActivity.findViewById(R.id.menu_settings_btn).getWidth();
-        int y = layout.availableSize.y - mainActivity.findViewById(R.id.shuffle_btn).getHeight()
-                - (int) mainActivity.getResources().getDimension(R.dimen.activity_vertical_margin);
-
-        showHint(text, x, y, false);
-        mainActivity.findViewById(R.id.hint).setOnTouchListener(new TouchHandler2() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            protected void click(int x, int y) {
+            public void run() {
                 mainActivity.getMenuController().hideMenuNow();
-                hideHintNow();
+                hide.start();
             }
-        });
-        storage.setHintSeen(HINT_MENU);
+        }, 2500);
     }
+
 
     private void showHint(String text, final int x, final int y, final boolean right) {
         final TextView hint = (TextView) mainActivity.findViewById(R.id.hint);

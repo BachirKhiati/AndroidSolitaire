@@ -17,15 +17,6 @@
     <include
         android:id="@+id/menuView"
         layout="@layout/menu_view" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:id="@+id/menu_new_game_win"
-        style="@style/menuTextStyle"
-        android:text="@string/menu_new"
-        android:visibility="gone"/>
-
     <include
         layout="@layout/hint_view"
         android:visibility="gone" />
@@ -34,12 +25,12 @@
         android:id="@+id/welcomeView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black" >
+        android:background="#2C742C">
 
         <ImageView
             android:id="@+id/welcomeLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/splash" />
 

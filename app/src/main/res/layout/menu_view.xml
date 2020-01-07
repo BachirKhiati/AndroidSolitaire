@@ -28,7 +28,8 @@
             android:layout_height="50dp"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/menu_item"
-            android:src="@drawable/btn_settings" />
+            android:src="@drawable/btn_settings"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/menu_newgame_btn"

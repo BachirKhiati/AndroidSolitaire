@@ -1,8 +1,5 @@
 package com.firenoid.solitaire;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -14,26 +11,21 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.firenoid.solitaire.Whiteboard.Event;
 import com.firenoid.solitaire.game.JSONStorage;
 import com.firenoid.solitaire.model.Card;
 import com.firenoid.solitaire.model.Deck;
 import com.firenoid.solitaire.model.IMove2;
-import com.firenoid.solitaire.model.Move;
 import com.firenoid.solitaire.model.Table;
 import com.firenoid.solitaire.util.TouchHandler2;
 
-import static com.firenoid.solitaire.model.Table.TABLEAU_DECKS_COUNT;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuController {
 
@@ -205,7 +197,7 @@ public class MenuController {
     }
 
     public Animator showWinMenu() {
-        final View winMenu = mainActivity.findViewById(R.id.menu_new_game_win);
+        final View winMenu = mainActivity.findViewById(R.id.winView);
         winMenu.setOnTouchListener(new TouchHandler2() {
             @Override
             protected void click(int x, int y) {
@@ -215,6 +207,7 @@ public class MenuController {
         winMenu.setTranslationY(0);
         winMenu.setAlpha(0);
         winMenu.setVisibility(View.VISIBLE);
+        btnShuffle.setVisibility(View.GONE);
         ObjectAnimator anim = ObjectAnimator.ofFloat(winMenu, "alpha", 0, 1);
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
